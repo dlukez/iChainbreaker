@@ -72,7 +72,7 @@ def main():
     m = rg.match(args.version[0])
     if m:
         minorver = m.group(3)
-        if minorver >= 12:
+        if int(minorver) >= 12:
             # Security-57740.51.3/OSX/sec/securityd/SecDbKeychainItem.c:97
             #
             # // echo "keychainblobstaticiv" | openssl dgst -sha256 | cut -c1-24 | xargs -I {} echo "0x{}" | xxd -r | xxd -p  -i
@@ -180,7 +180,7 @@ def main():
 
             unwrappedkey = AESUnwrap(key, wrappedkey)
 
-            decrypted = gcm_decrypt(unwrappedkey, gcmIV, encrypted_data, data[:sizeof(_EncryptedBlobHeader)], auth_tag)
+            decrypted = gcm_decrypt(unwrappedkey, gcmIV, encrypted_data, data[:sizeof(_EncryptedBlobHeader)] if gcmIV else '', auth_tag)
 
             if len(decrypted) is 0:
                 #print(" [-] Decryption Process Failed. Invalid Key or Data is corrupted.")
